@@ -82,13 +82,13 @@
 
   $.extend($.facebox, {
     settings: {
-      opacity      : 0.2,
+      opacity      : 0.5,
       overlay      : true,
-      loadingImage : '/facebox/loading.gif',
-      closeImage   : '/facebox/closelabel.png',
+      loadingImage : '/images/ajax-loader-button-white.gif',
+      closeImage   : '',
       imageTypes   : [ 'png', 'jpg', 'jpeg', 'gif' ],
       faceboxHtml  : '\
-    <div id="facebox" style="display:none;"> \
+    <div id="facebox" class="facebox_container" style="display:none;"> \
       <div class="popup"> \
         <div class="content"> \
         </div> \
@@ -106,8 +106,8 @@
         append('<div class="loading"><img src="'+$.facebox.settings.loadingImage+'"/></div>')
 
       $('#facebox').show().css({
-        top:	getPageScroll()[1] + (getPageHeight() / 10),
-        left:	$(window).width() / 2 - ($('#facebox .popup').outerWidth() / 2)
+        top:  getPageScroll()[1] + (getPageHeight() / 10),
+        left: $(window).width() / 2 - ($('#facebox .popup').outerWidth() / 2)
       })
 
       $(document).bind('keydown.facebox', function(e) {
@@ -175,7 +175,6 @@
     $('body').append($.facebox.settings.faceboxHtml)
 
     var preload = [ new Image(), new Image() ]
-    preload[0].src = $.facebox.settings.closeImage
     preload[1].src = $.facebox.settings.loadingImage
 
     $('#facebox').find('.b:first, .bl').each(function() {
@@ -185,9 +184,6 @@
 
     $('#facebox .close')
       .click($.facebox.close)
-      .append('<img src="'
-              + $.facebox.settings.closeImage
-              + '" class="close_image" title="close">')
   }
 
   // getPageScroll() by quirksmode.com
@@ -196,7 +192,7 @@
     if (self.pageYOffset) {
       yScroll = self.pageYOffset;
       xScroll = self.pageXOffset;
-    } else if (document.documentElement && document.documentElement.scrollTop) {	 // Explorer 6 Strict
+    } else if (document.documentElement && document.documentElement.scrollTop) {   // Explorer 6 Strict
       yScroll = document.documentElement.scrollTop;
       xScroll = document.documentElement.scrollLeft;
     } else if (document.body) {// all other Explorers
@@ -209,7 +205,7 @@
   // Adapted from getPageSize() by quirksmode.com
   function getPageHeight() {
     var windowHeight
-    if (self.innerHeight) {	// all except Explorer
+    if (self.innerHeight) { // all except Explorer
       windowHeight = self.innerHeight;
     } else if (document.documentElement && document.documentElement.clientHeight) { // Explorer 6 Strict Mode
       windowHeight = document.documentElement.clientHeight;
@@ -224,7 +220,6 @@
     var $s = $.facebox.settings
 
     $s.loadingImage = $s.loading_image || $s.loadingImage
-    $s.closeImage = $s.close_image || $s.closeImage
     $s.imageTypes = $s.image_types || $s.imageTypes
     $s.faceboxHtml = $s.facebox_html || $s.faceboxHtml
   }
@@ -271,23 +266,20 @@
     if (skipOverlay()) return
 
     if ($('#facebox_overlay').length == 0)
-      $("body").append('<div id="facebox_overlay" class="facebox_hide"></div>')
+      $("body").append('<div id="facebox_overlay"></div>')
 
     $('#facebox_overlay').hide().addClass("facebox_overlayBG")
       .css('opacity', $.facebox.settings.opacity)
       .click(function() { $(document).trigger('close.facebox') })
-      .fadeIn(200)
+      .show()
     return false
   }
 
   function hideOverlay() {
     if (skipOverlay()) return
 
-    $('#facebox_overlay').fadeOut(200, function(){
-      $("#facebox_overlay").removeClass("facebox_overlayBG")
-      $("#facebox_overlay").addClass("facebox_hide")
-      $("#facebox_overlay").remove()
-    })
+    $("#facebox_overlay").removeClass("facebox_overlayBG")
+    setTimeout(function() { $("#facebox_overlay").remove() }, 250);
 
     return false
   }

@@ -1,6 +1,6 @@
 /*
  * Facebox (for jQuery)
- * version: 1.3
+ * version: 1.3-genius-modifications
  * @requires jQuery v1.2 or later
  * @homepage https://github.com/defunkt/facebox
  *
